@@ -1,0 +1,9 @@
+nuget/
+packages/
+.vs/
+bin/
+obj/
+
+*.ncrunchsolution
+*.ncrunchproject
+*.user
