@@ -8,8 +8,22 @@ using Cyotek.Drawing.Imaging.Farbfeld;
 
 namespace FarbfeldBenchmarks
 {
-  public class DecodingBenchmarks
+  internal static class DecodingBenchmarks
   {
+    #region Static Properties
+
+    static string SampleFileName
+    {
+      get { return Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\res\dragon.ff")); }
+    }
+
+    static string SamplePngFileName
+    {
+      get { return Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\res\dragon.png")); }
+    }
+
+    #endregion
+
     #region Static Methods
 
     public static void Check()
@@ -21,7 +35,7 @@ namespace FarbfeldBenchmarks
         throw new Exception("No output.");
       }
 
-      using (Bitmap image = (Bitmap)Image.FromFile(GetSamplePngFileName()))
+      using (Bitmap image = (Bitmap)Image.FromFile(SamplePngFileName))
       {
         sourcePixels = image.GetPixels();
       }
@@ -68,14 +82,14 @@ namespace FarbfeldBenchmarks
     }
 
     [Benchmark]
-    public static void Test1_Read_a_byte_at_a_time_original()
+    public static void Test1_read_a_byte_at_a_time_original()
     {
       int count;
       string sampleFileName;
       List<ArgbColor[]> results;
 
       count = _iterations;
-      sampleFileName = GetSampleFileName();
+      sampleFileName = SampleFileName;
       results = new List<ArgbColor[]>();
 
       for (int i = 0; i < count; i++)
@@ -119,7 +133,7 @@ namespace FarbfeldBenchmarks
     }
 
     [Benchmark]
-    public static void Test2_Read_all_pixel_data_at_once()
+    public static void Test2_read_all_pixel_data_at_once()
     {
       const int recordLength = 4 * 2; // four values per pixel, two bytes per value
 
@@ -128,7 +142,7 @@ namespace FarbfeldBenchmarks
       List<ArgbColor[]> results;
 
       count = _iterations;
-      sampleFileName = GetSampleFileName();
+      sampleFileName = SampleFileName;
       results = new List<ArgbColor[]>();
 
       for (int i = 0; i < count; i++)
@@ -180,7 +194,7 @@ namespace FarbfeldBenchmarks
     }
 
     [Benchmark]
-    public static void Test3_Read_one_pixel_at_a_time()
+    public static void Test3_read_one_pixel_at_a_time()
     {
       const int recordLength = 4 * 2; // four values per pixel, two bytes per value
 
@@ -190,7 +204,7 @@ namespace FarbfeldBenchmarks
       byte[] buffer;
 
       count = _iterations;
-      sampleFileName = GetSampleFileName();
+      sampleFileName = SampleFileName;
       results = new List<ArgbColor[]>();
       buffer = new byte[recordLength];
 
@@ -238,7 +252,7 @@ namespace FarbfeldBenchmarks
     }
 
     [Benchmark]
-    public static void Test4_Read_pixel_data_by_row()
+    public static void Test4_read_pixel_data_by_row()
     {
       const int recordLength = 4 * 2; // four values per pixel, two bytes per value
 
@@ -247,7 +261,7 @@ namespace FarbfeldBenchmarks
       List<ArgbColor[]> results;
 
       count = _iterations;
-      sampleFileName = GetSampleFileName();
+      sampleFileName = SampleFileName;
       results = new List<ArgbColor[]>();
 
       for (int i = 0; i < count; i++)
@@ -304,23 +318,13 @@ namespace FarbfeldBenchmarks
       _testResults = results;
     }
 
-    static string GetSampleFileName()
-    {
-      return Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\res\dragon.ff"));
-    }
-
-    static string GetSamplePngFileName()
-    {
-      return Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\res\dragon.png"));
-    }
-
     #endregion
 
     #region Other
 
-    static int _iterations = 1;
+    private static int _iterations = 1;
 
-    static List<ArgbColor[]> _testResults;
+    private static List<ArgbColor[]> _testResults;
 
     #endregion
   }
