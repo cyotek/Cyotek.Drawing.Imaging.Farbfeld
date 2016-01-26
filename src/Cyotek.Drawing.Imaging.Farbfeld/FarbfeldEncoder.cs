@@ -79,7 +79,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld
       stream.WriteBigEndian(width);
       stream.WriteBigEndian(height);
 
-      pixels = this.GetPixels(image);
+      pixels = image.GetPixels();
 
       foreach (ArgbColor pixel in pixels)
       {
@@ -98,41 +98,6 @@ namespace Cyotek.Drawing.Imaging.Farbfeld
         stream.WriteBigEndian(b);
         stream.WriteBigEndian(a);
       }
-    }
-
-    private ArgbColor[] GetPixels(Bitmap bitmap)
-    {
-      int width;
-      int height;
-      BitmapData bitmapData;
-      ArgbColor[] results;
-
-      width = bitmap.Width;
-      height = bitmap.Height;
-      results = new ArgbColor[width * height];
-      bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly,
-                                   PixelFormat.Format32bppArgb);
-
-      unsafe
-      {
-        ArgbColor* pixel;
-
-        pixel = (ArgbColor*)bitmapData.Scan0;
-
-        for (int row = 0; row < height; row++)
-        {
-          for (int col = 0; col < width; col++)
-          {
-            results[row * width + col] = *pixel;
-
-            pixel++;
-          }
-        }
-      }
-
-      bitmap.UnlockBits(bitmapData);
-
-      return results;
     }
 
     #endregion
