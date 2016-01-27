@@ -1,24 +1,35 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 
-namespace Cyotek.Drawing.Imaging.Farbfeld
+namespace Cyotek.Drawing.Imaging
 {
   /// <summary>
   /// Encoder class for the farbfeld image format.
   /// </summary>
-  public class FarbfeldEncoder
+  public static class FarbfeldEncoder
   {
-    #region Methods
+    #region Static Methods
 
-    /// <summary>
-    /// Saves the given <see cref="Bitmap"/> into the specified file using the farbfeld image format.
-    /// </summary>
-    /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-    /// <param name="fileName">A string that contains the name of the file to which to save the <see cref="Bitmap"/>.</param>
-    /// <param name="image">The <see cref="Bitmap"/> to encode.</param>
-    public void Encode(string fileName, Bitmap image)
+    public static void Encode(string fileName, FarbfeldImageData imageData)
+    {
+      if (string.IsNullOrEmpty(fileName))
+      {
+        throw new ArgumentNullException(nameof(fileName));
+      }
+
+      if (imageData == null)
+      {
+        throw new ArgumentNullException(nameof(imageData));
+      }
+
+      using (Stream stream = File.Create(fileName))
+      {
+        Encode(stream, imageData);
+      }
+    }
+
+    public static void Encode(string fileName, Bitmap image)
     {
       if (string.IsNullOrEmpty(fileName))
       {
@@ -32,71 +43,93 @@ namespace Cyotek.Drawing.Imaging.Farbfeld
 
       using (Stream stream = File.Create(fileName))
       {
-        this.Encode(stream, image);
+        Encode(stream, image);
       }
     }
 
-    /// <summary>
-    /// Saves the given <see cref="Bitmap"/> into the specified file using the farbfeld image format.
-    /// </summary>
-    /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-    /// <param name="stream">The <see cref="Stream"/> where the image will be saved.</param>
-    /// <param name="image">The <see cref="Bitmap"/> to encode.</param>
-    /// <exception cref="ArgumentException">Thrown if the source image is not a 32bpp ARGB image.</exception>
-    public void Encode(Stream stream, Bitmap image)
+    public static void Encode(Stream stream, Bitmap image)
     {
-      int width;
-      int height;
-      ArgbColor[] pixels;
-
-      if (stream == null)
-      {
-        throw new ArgumentNullException(nameof(stream));
-      }
-
       if (image == null)
       {
         throw new ArgumentNullException(nameof(image));
       }
 
-      if (image.PixelFormat != PixelFormat.Format32bppArgb)
+      Encode(stream, new FarbfeldImageData(image));
+    }
+
+    public static void Encode(Stream stream, FarbfeldImageData imageData)
+    {
+      if (stream == null)
       {
-        throw new ArgumentException("Only 32bpp ARGB images are supported.", nameof(image));
+        throw new ArgumentNullException(nameof(imageData));
       }
 
-      stream.WriteByte((byte)'f');
-      stream.WriteByte((byte)'a');
-      stream.WriteByte((byte)'r');
-      stream.WriteByte((byte)'b');
-      stream.WriteByte((byte)'f');
-      stream.WriteByte((byte)'e');
-      stream.WriteByte((byte)'l');
-      stream.WriteByte((byte)'d');
+      if (imageData == null)
+      {
+        throw new ArgumentNullException(nameof(imageData));
+      }
 
-      width = image.Width;
-      height = image.Height;
+      byte[] data;
+      byte[] header;
+      byte[] buffer;
+      int width;
+      int height;
+      int rowLength;
+      int dataIndex;
 
+      width = imageData.Width;
+      height = imageData.Height;
+      data = imageData.GetData();
+
+      rowLength = width * Farbfeld.PixelDataLength;
+      dataIndex = 0;
+
+      header = new byte[8];
+      header[0] = (byte)'f';
+      header[1] = (byte)'a';
+      header[2] = (byte)'r';
+      header[3] = (byte)'b';
+      header[4] = (byte)'f';
+      header[5] = (byte)'e';
+      header[6] = (byte)'l';
+      header[7] = (byte)'d';
+
+      stream.Write(header, 0, 8);
       stream.WriteBigEndian(width);
       stream.WriteBigEndian(height);
 
-      pixels = image.GetPixels();
+      buffer = new byte[rowLength];
 
-      foreach (ArgbColor pixel in pixels)
+      for (int row = 0; row < height; row++)
       {
-        ushort r;
-        ushort g;
-        ushort b;
-        ushort a;
+        for (int col = 0; col < width; col++)
+        {
+          int index;
+          ushort r;
+          ushort g;
+          ushort b;
+          ushort a;
 
-        r = (ushort)(pixel.R * 256);
-        g = (ushort)(pixel.G * 256);
-        b = (ushort)(pixel.B * 256);
-        a = (ushort)(pixel.A * 256);
+          index = col * Farbfeld.PixelDataLength;
 
-        stream.WriteBigEndian(r);
-        stream.WriteBigEndian(g);
-        stream.WriteBigEndian(b);
-        stream.WriteBigEndian(a);
+          r = (ushort)(data[dataIndex] * 256);
+          g = (ushort)(data[dataIndex + 1] * 256);
+          b = (ushort)(data[dataIndex + 2] * 256);
+          a = (ushort)(data[dataIndex + 3] * 256);
+
+          buffer[index] = (byte)(r >> 8);
+          buffer[index + 1] = (byte)r;
+          buffer[index + 2] = (byte)(g >> 8);
+          buffer[index + 3] = (byte)g;
+          buffer[index + 4] = (byte)(b >> 8);
+          buffer[index + 5] = (byte)b;
+          buffer[index + 6] = (byte)(a >> 8);
+          buffer[index + 7] = (byte)a;
+
+          dataIndex += 4;
+        }
+
+        stream.Write(buffer, 0, rowLength);
       }
     }
 

@@ -1,4 +1,4 @@
-﻿namespace FarbfeldBenchmarks
+﻿namespace Cyotek.Drawing.Imaging
 {
   internal static class WordHelpers
   {

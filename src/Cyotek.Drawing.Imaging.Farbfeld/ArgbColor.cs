@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Cyotek.Drawing.Imaging.Farbfeld
+namespace Cyotek.Drawing.Imaging
 {
   /// <summary>
   /// Represents an ARGB (alpha, red, green, blue) color.

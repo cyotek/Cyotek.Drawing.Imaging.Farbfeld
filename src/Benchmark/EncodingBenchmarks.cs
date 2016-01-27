@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Cyotek.Drawing.Imaging.Farbfeld;
+using Cyotek.Drawing.Imaging;
 
 namespace FarbfeldBenchmarks
 {

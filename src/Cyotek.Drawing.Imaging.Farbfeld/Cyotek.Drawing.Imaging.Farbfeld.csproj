@@ -7,7 +7,7 @@
     <ProjectGuid>{7EA66D62-74F2-4088-9509-23F2936A8BB5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cyotek.Drawing.Imaging.Farbfeld</RootNamespace>
+    <RootNamespace>Cyotek.Drawing.Imaging</RootNamespace>
     <AssemblyName>Cyotek.Drawing.Imaging.Farbfeld</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -45,11 +45,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgbColor.cs" />
+    <Compile Include="Farbfeld.cs" />
     <Compile Include="FarbfeldDecoder.cs" />
     <Compile Include="FarbfeldEncoder.cs" />
+    <Compile Include="FarbfeldImageData.cs" />
     <Compile Include="ImageExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreamExtensions.cs" />
+    <Compile Include="WordHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\res\Cyotek.Drawing.Imaging.Farbfeld.snk">

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using Cyotek.Drawing.Imaging.Farbfeld;
+using Cyotek.Drawing.Imaging;
 
 // http://yoda.arachsys.com/csharp/benchmark.html
 

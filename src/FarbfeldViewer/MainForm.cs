@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Cyotek.Drawing.Imaging.Farbfeld;
+using Cyotek.Drawing.Imaging;
 using Cyotek.Windows.Forms;
 
 namespace FarbfeldViewer
@@ -111,18 +111,16 @@ namespace FarbfeldViewer
 #endif
         {
           Bitmap image;
-          FarbfeldDecoder decoder;
 
           this.SetStatus("Opening...");
 
-          decoder = new FarbfeldDecoder();
-
-          _isFarbfeldImage = decoder.IsFarbfeldImage(fileName);
+          _isFarbfeldImage = FarbfeldDecoder.IsFarbfeldImage(fileName);
 
           if (_isFarbfeldImage)
           {
             // opening a farbfeld image
-            image = decoder.Decode(fileName);
+            image = FarbfeldDecoder.Decode(fileName).
+                                    ToBitmap();
           }
           else
           {
@@ -226,12 +224,12 @@ namespace FarbfeldViewer
     private void SaveFile(string fileName)
     {
 #if !DEBUG
-        try
+      try
 #endif
       {
         this.SetStatus("Saving...");
 
-        new FarbfeldEncoder().Encode(fileName, _currentImage);
+        FarbfeldEncoder.Encode(fileName, _currentImage);
 
         _fileName = fileName;
         _isFarbfeldImage = true;

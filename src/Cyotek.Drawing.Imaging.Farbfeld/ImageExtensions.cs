@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
 
-namespace Cyotek.Drawing.Imaging.Farbfeld
+namespace Cyotek.Drawing.Imaging
 {
   internal static class ImageExtensions
   {
+    #region Static Methods
+
     public static Bitmap Copy(this Image image)
     {
       return Copy(image, Color.Transparent);
@@ -36,7 +34,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld
 
       if (bitmap.PixelFormat == PixelFormat.Format32bppArgb)
       {
-        results = bitmap.Get32bppArgbPixels();
+        results = bitmap.Get32BppArgbPixels();
       }
       else
       {
@@ -44,14 +42,14 @@ namespace Cyotek.Drawing.Imaging.Farbfeld
 
         using (Bitmap copy = bitmap.Copy())
         {
-          results = copy.Get32bppArgbPixels();
+          results = copy.Get32BppArgbPixels();
         }
       }
 
       return results;
     }
 
-    private static ArgbColor[] Get32bppArgbPixels(this Bitmap bitmap)
+    private static ArgbColor[] Get32BppArgbPixels(this Bitmap bitmap)
     {
       int width;
       int height;
@@ -85,5 +83,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld
 
       return results;
     }
+
+    #endregion
   }
 }

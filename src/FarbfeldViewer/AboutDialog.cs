@@ -5,7 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using CommonMark;
-using Cyotek.Drawing.Imaging.Farbfeld;
+using Cyotek.Drawing.Imaging;
 using FarbfeldViewer.Properties;
 using TheArtOfDev.HtmlRenderer.WinForms;
 

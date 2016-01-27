@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Cyotek.Drawing.Imaging.Farbfeld
+namespace Cyotek.Drawing.Imaging
 {
   internal static class StreamExtensions
   {

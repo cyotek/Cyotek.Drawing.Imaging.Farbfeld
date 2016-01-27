@@ -1,0 +1,1 @@
+* [ ] Converting uint16 to a single byte to match .NET's color scheme just doesn't work, as precision is lost and the zero lo byte seems to cause no end of issues with other programs - (128, 128) = 32896. Converted to (128, 0) = 32768

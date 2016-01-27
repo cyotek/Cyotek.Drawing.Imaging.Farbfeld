@@ -1,72 +1,82 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 
-namespace Cyotek.Drawing.Imaging.Farbfeld
+namespace Cyotek.Drawing.Imaging
 {
   /// <summary>
   /// Decoder class for the farbfeld image format.
   /// </summary>
-  public class FarbfeldDecoder
+  public static class FarbfeldDecoder
   {
-    #region Methods
+    #region Static Methods
 
-    /// <summary>
-    /// Creates a <see cref="Bitmap"/> from the specified file.
-    /// </summary>
-    /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-    /// <exception cref="InvalidDataException">Thrown when the source data is not a Farbfeld image.</exception>
-    /// <param name="fileName">A string that contains the name of the file from which to create the <see cref="Bitmap"/>.</param>
-    /// <returns>
-    /// The <see cref="Bitmap"/> this method creates.
-    /// </returns>
-    public Bitmap Decode(string fileName)
+    public static FarbfeldImageData Decode(string fileName)
     {
-      if (string.IsNullOrEmpty(fileName))
-      {
-        throw new ArgumentNullException(nameof(fileName));
-      }
-
       using (Stream stream = File.OpenRead(fileName))
       {
-        return this.Decode(stream);
+        return Decode(stream);
       }
     }
 
-    /// <summary>
-    /// Creates a <see cref="Bitmap"/> from the specified stream.
-    /// </summary>
-    /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-    /// <exception cref="InvalidDataException">Thrown when the source data is not a Farbfeld image.</exception>
-    /// <param name="stream">A <see cref="Stream"/> that contains the data for this <see cref="Bitmap"/>.</param>
-    /// <returns>
-    /// The <see cref="Bitmap"/> this method creates.
-    /// </returns>
-    public Bitmap Decode(Stream stream)
+    public static FarbfeldImageData Decode(Stream stream)
     {
       int width;
       int height;
-      int length;
-      ArgbColor[] pixels;
+      byte[] header;
+      byte[] buffer;
+      byte[] data;
+      int rowLength;
+      int dataIndex;
 
       if (stream == null)
       {
         throw new ArgumentNullException(nameof(stream));
       }
 
-      if (!this.IsFarbfeldImage(stream))
+      if (!IsFarbfeldImage(stream))
       {
         throw new InvalidDataException("Stream does not contain a farbfeld image.");
       }
 
-      width = stream.ReadUInt32BigEndian();
-      height = stream.ReadUInt32BigEndian();
-      length = width * height;
-      pixels = this.ReadPixelData(stream, length);
+      header = new byte[8];
 
-      return this.CreateBitmap(width, height, pixels);
+      stream.Read(header, 0, header.Length);
+      width = WordHelpers.MakeDWordBigEndian(header[0], header[1], header[2], header[3]);
+      height = WordHelpers.MakeDWordBigEndian(header[4], header[5], header[6], header[7]);
+      rowLength = width * Farbfeld.PixelDataLength;
+      buffer = new byte[rowLength];
+      data = new byte[width * height * 4];
+      dataIndex = 0;
+
+      for (int row = 0; row < height; row++)
+      {
+        stream.Read(buffer, 0, rowLength);
+
+        for (int col = 0; col < width; col++)
+        {
+          byte r;
+          byte g;
+          byte b;
+          byte a;
+          int index;
+
+          index = col * Farbfeld.PixelDataLength;
+
+          r = (byte)(WordHelpers.MakeWordBigEndian(buffer[index], buffer[index + 1]) / 256);
+          g = (byte)(WordHelpers.MakeWordBigEndian(buffer[index + 2], buffer[index + 3]) / 256);
+          b = (byte)(WordHelpers.MakeWordBigEndian(buffer[index + 4], buffer[index + 5]) / 256);
+          a = (byte)(WordHelpers.MakeWordBigEndian(buffer[index + 6], buffer[index + 7]) / 256);
+
+          data[dataIndex] = r;
+          data[dataIndex + 1] = g;
+          data[dataIndex + 2] = b;
+          data[dataIndex + 3] = a;
+
+          dataIndex += 4;
+        }
+      }
+
+      return new FarbfeldImageData(width, height, data);
     }
 
     /// <summary>
@@ -77,7 +87,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld
     /// <returns>
     /// <c>true</c> if the file contains Farbfeld image data, otherwise <c>false</c>.
     /// </returns>
-    public bool IsFarbfeldImage(string fileName)
+    public static bool IsFarbfeldImage(string fileName)
     {
       if (string.IsNullOrEmpty(fileName))
       {
@@ -86,7 +96,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld
 
       using (Stream stream = File.OpenRead(fileName))
       {
-        return this.IsFarbfeldImage(stream);
+        return IsFarbfeldImage(stream);
       }
     }
 
@@ -99,7 +109,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld
     /// <c>true</c> if the <see cref="Stream"/> contains Farbfeld image data, otherwise <c>false</c>.
     /// </returns>
     /// <remarks>The position of the <see cref="Stream"/> is not reset after reading data.</remarks>
-    public bool IsFarbfeldImage(Stream stream)
+    public static bool IsFarbfeldImage(Stream stream)
     {
       byte[] buffer;
 
@@ -114,58 +124,6 @@ namespace Cyotek.Drawing.Imaging.Farbfeld
 
       return buffer[0] == 'f' && buffer[1] == 'a' && buffer[2] == 'r' && buffer[3] == 'b' && buffer[4] == 'f' &&
              buffer[5] == 'e' && buffer[6] == 'l' && buffer[7] == 'd';
-    }
-
-    private Bitmap CreateBitmap(int width, int height, IList<ArgbColor> pixels)
-    {
-      Bitmap bitmap;
-      BitmapData bitmapData;
-
-      bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-
-      bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite,
-                                   PixelFormat.Format32bppArgb);
-
-      unsafe
-      {
-        ArgbColor* pixelPtr;
-
-        pixelPtr = (ArgbColor*)bitmapData.Scan0;
-
-        for (int i = 0; i < width * height; i++)
-        {
-          *pixelPtr = pixels[i];
-          pixelPtr++;
-        }
-      }
-
-      bitmap.UnlockBits(bitmapData);
-
-      return bitmap;
-    }
-
-    private ArgbColor[] ReadPixelData(Stream stream, int length)
-    {
-      ArgbColor[] pixels;
-
-      pixels = new ArgbColor[length];
-
-      for (int i = 0; i < length; i++)
-      {
-        int r;
-        int g;
-        int b;
-        int a;
-
-        r = stream.ReadUInt16BigEndian() / 256;
-        g = stream.ReadUInt16BigEndian() / 256;
-        b = stream.ReadUInt16BigEndian() / 256;
-        a = stream.ReadUInt16BigEndian() / 256;
-
-        pixels[i] = new ArgbColor(a, r, g, b);
-      }
-
-      return pixels;
     }
 
     #endregion
