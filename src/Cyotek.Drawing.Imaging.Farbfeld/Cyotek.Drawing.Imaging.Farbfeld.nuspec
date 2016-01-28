@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Cyotek.Drawing.Imaging.Farbfeld</id>
+    <version>2.0.0</version>
+    <title>Cyotek.Drawing.Imaging.Farbfeld</title>
+    <authors>Cyotek</authors>
+    <owners>Cyotek</owners>
+    <licenseUrl>https://raw.githubusercontent.com/cyotek/Cyotek.Drawing.Imaging.Farbfeld/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/cyotek/Cyotek.Drawing.Imaging.Farbfeld</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/cyotek/Cyotek.Drawing.Imaging.Farbfeld/master/res/icon-32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+      farbfeld is a lossless image format which is easy to parse, pipe and compress.
+
+      Cyotek.Drawing.Imaging.Farbfeld is a library for encoding and decoding farbfeld image files.
+    </description>
+    <summary>Cyotek.Drawing.Imaging.Farbfeld is a library for encoding and decoding farbfeld image files.</summary>
+    <releaseNotes />
+    <copyright>Copyright 2016 Cyotek Ltd.</copyright>
+    <language>en-GB</language>
+    <tags>cyotek farbfeld</tags>
+  </metadata>
+</package>

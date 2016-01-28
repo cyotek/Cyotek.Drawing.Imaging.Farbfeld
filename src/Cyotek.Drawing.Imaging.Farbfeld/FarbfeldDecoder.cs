@@ -24,7 +24,7 @@ namespace Cyotek.Drawing.Imaging
       int height;
       byte[] header;
       byte[] buffer;
-      byte[] data;
+      ushort[] data;
       int rowLength;
       int dataIndex;
 
@@ -45,7 +45,7 @@ namespace Cyotek.Drawing.Imaging
       height = WordHelpers.MakeDWordBigEndian(header[4], header[5], header[6], header[7]);
       rowLength = width * Farbfeld.PixelDataLength;
       buffer = new byte[rowLength];
-      data = new byte[width * height * 4];
+      data = new ushort[width * height * 4];
       dataIndex = 0;
 
       for (int row = 0; row < height; row++)
@@ -54,18 +54,18 @@ namespace Cyotek.Drawing.Imaging
 
         for (int col = 0; col < width; col++)
         {
-          byte r;
-          byte g;
-          byte b;
-          byte a;
+          ushort r;
+          ushort g;
+          ushort b;
+          ushort a;
           int index;
 
           index = col * Farbfeld.PixelDataLength;
 
-          r = (byte)(WordHelpers.MakeWordBigEndian(buffer[index], buffer[index + 1]) / 256);
-          g = (byte)(WordHelpers.MakeWordBigEndian(buffer[index + 2], buffer[index + 3]) / 256);
-          b = (byte)(WordHelpers.MakeWordBigEndian(buffer[index + 4], buffer[index + 5]) / 256);
-          a = (byte)(WordHelpers.MakeWordBigEndian(buffer[index + 6], buffer[index + 7]) / 256);
+          r = WordHelpers.MakeWordBigEndian(buffer[index], buffer[index + 1]);
+          g = WordHelpers.MakeWordBigEndian(buffer[index + 2], buffer[index + 3]);
+          b = WordHelpers.MakeWordBigEndian(buffer[index + 4], buffer[index + 5]);
+          a = WordHelpers.MakeWordBigEndian(buffer[index + 6], buffer[index + 7]);
 
           data[dataIndex] = r;
           data[dataIndex + 1] = g;

@@ -56,19 +56,17 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       // arrange
       string target;
       string source;
-      FarbfeldImageData actual;
-      FarbfeldImageData expected;
+      FarbfeldImageData data;
 
       source = Path.Combine(this.DataPath, "yellow-1x1-semitransparent.png.ff");
       target = Path.GetTempFileName();
-      expected = FarbfeldDecoder.Decode(source);
+      data = FarbfeldDecoder.Decode(source);
 
       // act
-      FarbfeldEncoder.Encode(target, expected);
+      FarbfeldEncoder.Encode(target, data);
 
       // assert
-      actual = FarbfeldDecoder.Decode(target);
-      this.AssertEqual(expected, actual);
+      this.AssertFilesEqual(source, target);
       File.Delete(target);
     }
 

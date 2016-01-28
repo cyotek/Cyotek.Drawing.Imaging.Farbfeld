@@ -1,1 +1,2 @@
-* [ ] Converting uint16 to a single byte to match .NET's color scheme just doesn't work, as precision is lost and the zero lo byte seems to cause no end of issues with other programs - (128, 128) = 32896. Converted to (128, 0) = 32768
+* [x] ~~Converting uint16 to a single byte to match .NET's color scheme just doesn't work, as precision is lost and the zero lo byte seems to cause no end of issues with other programs - (128, 128) = 32896. Converted to (128, 0) = 32768. The 0 seems to be the killer.~~
+* [ ] All the encoding/decoding assumes the platform is little-endian and so converts values to big-endian. But if the platform was already LE, then the conversion code is going to convert to LE.

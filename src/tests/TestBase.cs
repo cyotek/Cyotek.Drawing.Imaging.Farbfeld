@@ -14,16 +14,16 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       {
         int width;
         int height;
-        byte[] data;
+        ushort[] data;
 
         width = 1;
         height = 1;
-        data = new byte[]
+        data = new ushort[]
                {
-                 255,
-                 255,
+                 65535,
+                 65535,
                  0,
-                 128
+                 32896
                };
 
         return new FarbfeldImageData(width, height, data);
@@ -41,36 +41,36 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       {
         int width;
         int height;
-        byte[] data;
+        ushort[] data;
 
         width = 2;
         height = 3;
-        data = new byte[]
+        data = new ushort[]
                {
                  0,
                  0,
                  0,
-                 255,
-                 255,
-                 255,
-                 255,
-                 255,
+                 65535,
+                 65535,
+                 65535,
+                 65535,
+                 65535,
                  0,
                  0,
                  0,
-                 255,
-                 255,
-                 255,
-                 255,
-                 255,
+                 65535,
+                 65535,
+                 65535,
+                 65535,
+                 65535,
                  0,
                  0,
                  0,
-                 255,
+                 65535,
                  0,
                  0,
                  0,
-                 255
+                 65535
                };
 
         return new FarbfeldImageData(width, height, data);
@@ -81,12 +81,12 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
 
     #region Methods
 
-    protected void AssertEqual(Stream stream1, Stream stream2)
+    protected void AssertEqual(Stream expected, Stream actual)
     {
-      this.AssertEqual(stream1, stream2, 4096);
+      this.AssertEqual(expected, actual, 4096);
     }
 
-    protected void AssertEqual(Stream stream1, Stream stream2, int bufferSize)
+    protected void AssertEqual(Stream expected, Stream actual, int bufferSize)
     {
       byte[] buffer1;
       byte[] buffer2;
@@ -94,12 +94,12 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       buffer1 = new byte[bufferSize];
       buffer2 = new byte[bufferSize];
 
-      while (stream1.Position < stream1.Length)
+      while (expected.Position < expected.Length)
       {
         int bytesRead1;
 
-        bytesRead1 = stream1.Read(buffer1, 0, bufferSize);
-        stream2.Read(buffer2, 0, bufferSize);
+        bytesRead1 = expected.Read(buffer1, 0, bufferSize);
+        actual.Read(buffer2, 0, bufferSize);
 
         for (int i = 0; i < bytesRead1; i++)
         {
@@ -108,10 +108,10 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       }
     }
 
-    protected void AssertEqual(FarbfeldImageData expected, FarbfeldImageData actual)
+    protected void AssertEqual(FarbfeldImageData expected, FarbfeldImageData actual, bool fuzzyMatch)
     {
-      byte[] expectedData;
-      byte[] actualData;
+      ushort[] expectedData;
+      ushort[] actualData;
 
       Assert.Equal(expected.Width, actual.Width);
       Assert.Equal(expected.Height, actual.Height);
@@ -123,26 +123,39 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
 
       for (int i = 0; i < expectedData.Length; i++)
       {
-        Assert.Equal(expectedData[i], actualData[i]);
+        if (!fuzzyMatch)
+        {
+          Assert.Equal(expectedData[i], actualData[i]);
+        }
+        else
+        {
+          byte expectedByte;
+          byte actualByte;
+
+          expectedByte = (byte)(expectedData[i] >> 8);
+          actualByte = (byte)(actualData[i] >> 8);
+
+          Assert.Equal(expectedByte, actualByte);
+        }
       }
     }
 
-    protected void AssertFilesEqual(string filePath1, string filePath2)
+    protected void AssertFilesEqual(string expected, string actual)
     {
-      this.AssertFilesEqual(filePath1, filePath2, 4096);
+      this.AssertFilesEqual(expected, actual, 4096);
     }
 
-    protected void AssertFilesEqual(string filePath1, string filePath2, int bufferSize)
+    protected void AssertFilesEqual(string expected, string actual, int bufferSize)
     {
       using (
-        Stream stream1 = new FileStream(filePath1, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize,
-                                        FileOptions.SequentialScan))
+        Stream expectedStream = new FileStream(expected, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize,
+                                               FileOptions.SequentialScan))
       {
         using (
-          Stream stream2 = new FileStream(filePath2, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize,
-                                          FileOptions.SequentialScan))
+          Stream actualStream = new FileStream(actual, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize,
+                                               FileOptions.SequentialScan))
         {
-          this.AssertEqual(stream1, stream2, bufferSize);
+          this.AssertEqual(expectedStream, actualStream, bufferSize);
         }
       }
     }

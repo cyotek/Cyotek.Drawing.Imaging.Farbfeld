@@ -8,13 +8,13 @@ namespace Cyotek.Drawing.Imaging
   {
     #region Constants
 
-    private static readonly byte[] _emptyData = new byte[0];
+    private static readonly ushort[] _emptyData = new ushort[0];
 
     #endregion
 
     #region Fields
 
-    private byte[] _data;
+    private ushort[] _data;
 
     #endregion
 
@@ -27,17 +27,7 @@ namespace Cyotek.Drawing.Imaging
         throw new ArgumentNullException(nameof(image));
       }
 
-      if (image.PixelFormat == PixelFormat.Format32bppArgb)
-      {
-        this.LoadFrom(image);
-      }
-      else
-      {
-        using (Bitmap copy = image.Copy())
-        {
-          this.LoadFrom(copy);
-        }
-      }
+      this.LoadFrom(image);
     }
 
     public FarbfeldImageData()
@@ -45,7 +35,8 @@ namespace Cyotek.Drawing.Imaging
       _data = _emptyData;
     }
 
-    public FarbfeldImageData(int width, int height, byte[] data)
+    [CLSCompliant(false)]
+    public FarbfeldImageData(int width, int height, ushort[] data)
     {
       this.Width = width;
       this.Height = height;
@@ -64,12 +55,14 @@ namespace Cyotek.Drawing.Imaging
 
     #region Methods
 
-    public byte[] GetData()
+    [CLSCompliant(false)]
+    public ushort[] GetData()
     {
-      return (byte[])_data.Clone();
+      return (ushort[])_data.Clone();
     }
 
-    public void SetData(byte[] data)
+    [CLSCompliant(false)]
+    public void SetData(ushort[] data)
     {
       int length;
 
@@ -85,7 +78,7 @@ namespace Cyotek.Drawing.Imaging
         throw new ArgumentException($"Data must contain {length} elements.");
       }
 
-      _data = (byte[])data.Clone();
+      _data = (ushort[])data.Clone();
     }
 
     public Bitmap ToBitmap()
@@ -94,7 +87,7 @@ namespace Cyotek.Drawing.Imaging
       BitmapData bitmapData;
       int width;
       int height;
-      byte[] data;
+      ushort[] data;
 
       width = this.Width;
       height = this.Height;
@@ -115,7 +108,8 @@ namespace Cyotek.Drawing.Imaging
 
         for (int i = 0; i < width * height; i++)
         {
-          *pixelPtr = new ArgbColor(data[index + 3], data[index], data[index + 1], data[index + 2]);
+          *pixelPtr = new ArgbColor(data[index + 3] / 256, data[index] / 256, data[index + 1] / 256,
+                                    data[index + 2] / 256);
           pixelPtr++;
           index += 4;
         }
@@ -130,11 +124,47 @@ namespace Cyotek.Drawing.Imaging
     {
       int width;
       int height;
-      byte[] data;
+      ushort[] data;
+      ArgbColor[] pixels;
 
       width = image.Width;
       height = image.Height;
-      data = new byte[width * height * 4];
+      data = new ushort[width * height * 4];
+
+      pixels = image.GetPixels();
+
+      for (int i = 0; i < pixels.Length; i++)
+      {
+        ArgbColor pixel;
+        int index;
+        byte a;
+        byte r;
+        byte g;
+        byte b;
+
+        pixel = pixels[i];
+        index = i * 4;
+
+        r = pixel.R;
+        g = pixel.G;
+        b = pixel.B;
+        a = pixel.A;
+
+        // HACK: I have noticed that data files using BE seem to treat values
+        // where the right hand byte is zero as if both bytes were zero. I am
+        // missing something obvious about this behaviour I'm sure. Regardless,
+        // it means converting a byte to a uint16 is going wrong as first came
+        // up here:
+        // https://forums.cyotek.com/cyotek-palette-editor/colour-palettes-not-displaying-colours/
+        // So, I'm taking that same byte and applying it to both bytes for a
+        // uint16 - this seems to resolve the issue, althought I would like
+        // to know why other programs dislike it when the right hand side is zero
+
+        data[index] = WordHelpers.MakeWordBigEndian(r, r);
+        data[index + 1] = WordHelpers.MakeWordBigEndian(g, g);
+        data[index + 2] = WordHelpers.MakeWordBigEndian(b, b);
+        data[index + 3] = WordHelpers.MakeWordBigEndian(a, a);
+      }
 
       this.Width = width;
       this.Height = height;

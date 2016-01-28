@@ -23,7 +23,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       actual = FarbfeldDecoder.Decode(fileName);
 
       // assert
-      this.AssertEqual(expected, actual);
+      this.AssertEqual(expected, actual, false);
     }
 
     [Fact]
@@ -45,7 +45,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       }
 
       // assert
-      this.AssertEqual(expected, actual);
+      this.AssertEqual(expected, actual, false);
     }
 
     [Fact]
@@ -67,7 +67,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       }
 
       // assert
-      this.AssertEqual(expected, actual);
+      this.AssertEqual(expected, actual, false);
     }
 
     [Fact]

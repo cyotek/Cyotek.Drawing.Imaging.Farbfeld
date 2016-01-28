@@ -9,6 +9,21 @@ namespace Cyotek.Drawing.Imaging
   /// </summary>
   public static class FarbfeldEncoder
   {
+    #region Constants
+
+    private static readonly bool _isLittleEndian;
+
+    #endregion
+
+    #region Static Constructors
+
+    static FarbfeldEncoder()
+    {
+      _isLittleEndian = BitConverter.IsLittleEndian;
+    }
+
+    #endregion
+
     #region Static Methods
 
     public static void Encode(string fileName, FarbfeldImageData imageData)
@@ -69,7 +84,7 @@ namespace Cyotek.Drawing.Imaging
         throw new ArgumentNullException(nameof(imageData));
       }
 
-      byte[] data;
+      ushort[] data;
       byte[] header;
       byte[] buffer;
       int width;
@@ -112,10 +127,10 @@ namespace Cyotek.Drawing.Imaging
 
           index = col * Farbfeld.PixelDataLength;
 
-          r = (ushort)(data[dataIndex] * 256);
-          g = (ushort)(data[dataIndex + 1] * 256);
-          b = (ushort)(data[dataIndex + 2] * 256);
-          a = (ushort)(data[dataIndex + 3] * 256);
+          r = data[dataIndex];
+          g = data[dataIndex + 1];
+          b = data[dataIndex + 2];
+          a = data[dataIndex + 3];
 
           buffer[index] = (byte)(r >> 8);
           buffer[index + 1] = (byte)r;
