@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Xunit;
+using NUnit.Framework;
 
 namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
 {
@@ -7,7 +7,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
   {
     #region Methods
 
-    [Fact]
+    [Test]
     public void Decoder_can_read_basic_image_from_file()
     {
       // arrange
@@ -26,7 +26,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       this.AssertEqual(expected, actual, false);
     }
 
-    [Fact]
+    [Test]
     public void Decoder_can_read_basic_image_from_stream()
     {
       // arrange
@@ -48,7 +48,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       this.AssertEqual(expected, actual, false);
     }
 
-    [Fact]
+    [Test]
     public void Decoder_reads_alpha_channel()
     {
       // arrange
@@ -70,7 +70,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       this.AssertEqual(expected, actual, false);
     }
 
-    [Fact]
+    [Test]
     public void IsFarbfeldImage_returns_false_for_invalid_image_file()
     {
       // arrange
@@ -86,7 +86,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       Assert.False(actual);
     }
 
-    [Fact]
+    [Test]
     public void IsFarbfeldImage_returns_false_for_invalid_image_stream()
     {
       // arrange
@@ -105,7 +105,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       Assert.False(actual);
     }
 
-    [Fact]
+    [Test]
     public void IsFarbfeldImage_returns_true_for_image_file()
     {
       // arrange
@@ -121,7 +121,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       Assert.True(actual);
     }
 
-    [Fact]
+    [Test]
     public void IsFarbfeldImage_returns_true_for_image_stream()
     {
       // arrange

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
-using Xunit;
+using NUnit.Framework;
 
 namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
 {
+  [TestFixture]
   public abstract class TestBase
   {
     #region Properties
@@ -103,7 +104,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
 
         for (int i = 0; i < bytesRead1; i++)
         {
-          Assert.Equal(buffer1[i], buffer2[i]);
+          Assert.AreEqual(buffer1[i], buffer2[i]);
         }
       }
     }
@@ -113,19 +114,19 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       ushort[] expectedData;
       ushort[] actualData;
 
-      Assert.Equal(expected.Width, actual.Width);
-      Assert.Equal(expected.Height, actual.Height);
+      Assert.AreEqual(expected.Width, actual.Width);
+      Assert.AreEqual(expected.Height, actual.Height);
 
       expectedData = expected.GetData();
       actualData = actual.GetData();
 
-      Assert.Equal(expectedData.Length, actualData.Length);
+      Assert.AreEqual(expectedData.Length, actualData.Length);
 
       for (int i = 0; i < expectedData.Length; i++)
       {
         if (!fuzzyMatch)
         {
-          Assert.Equal(expectedData[i], actualData[i]);
+          Assert.AreEqual(expectedData[i], actualData[i]);
         }
         else
         {
@@ -135,7 +136,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
           expectedByte = (byte)(expectedData[i] >> 8);
           actualByte = (byte)(actualData[i] >> 8);
 
-          Assert.Equal(expectedByte, actualByte);
+          Assert.AreEqual(expectedByte, actualByte);
         }
       }
     }

@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Xunit;
+using NUnit.Framework;
 
 namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
 {
@@ -7,7 +7,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
   {
     #region Methods
 
-    [Fact]
+    [Test]
     public void Encoder_can_write_basic_image_file()
     {
       // arrange
@@ -27,7 +27,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       File.Delete(target);
     }
 
-    [Fact]
+    [Test]
     public void Encoder_can_write_basic_image_stream()
     {
       // arrange
@@ -50,7 +50,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       File.Delete(target);
     }
 
-    [Fact]
+    [Test]
     public void Encoder_stores_alpha_channel()
     {
       // arrange

@@ -1,6 +1,8 @@
 Cyotek.Drawing.Imaging.Farbfeld
 ===============================
 
+[![Build status](https://ci.appveyor.com/api/projects/status/jyok3womv7327b6o)](https://ci.appveyor.com/project/cyotek/cyotek-drawing-imaging-farbfeld)
+
 ![Sample Screenshot](screenshot.png)
 
 About farbfeld
@@ -20,32 +22,26 @@ The RGB-data should be sRGB for best interoperability and not alpha-premultiplie
 About Cyotek.Drawing.Imaging.Farbfeld
 -------------------------------------
 
-**Cyotek.Drawing.Imaging.Farbfeld** is a library for processing farbfeld files in .NET.
-
-I wanted a simple image format for storing cross platform data without requiring complicated decoding. I had considered [PPM](https://en.wikipedia.org/wiki/Netpbm_format) but had decided on a binary format. I had actually sketched out my own simple indexed format when by sheer coincidence farbfeld (which I keep writing as farfeld and am forever having to correct!) popped up on [Hacker News](https://news.ycombinator.com/item?id=10890873). Not having anything better to do on a Friday night, I decided I would write an encoder/decoder in order to load and save .NET images in this format.
-
-As it turns out, compression is pretty much a must with this format - a HD image creates a 16MB farbfeld file. Note that this library does not handle any of that, it only handles raw farbfeld data. When I sketched my own format, it was 8bit indexed, so should have been quite small without needing compression, but of course only 256 colours and no alpha.
-
-I've only spent a couple of hours this evening working on the project so take the library with a pinch of salt. It might be (is) missing functionality, could have bugs, API could be better, etc. I'll be refining this over time when I actually use it in the project I intended it for in the next couple of weeks.
+**Cyotek.Drawing.Imaging.Farbfeld** is a library for processing farbfeld files in .NET. There's a bit of background information on why I created this library on the [cyotek.com blog](http://www.cyotek.com/blog/reading-and-writing-farbfeld-images-using-csharp).
 
 Using the library
 -----------------
 
-There are two classes, `FarbfeldDecoder` and `FarbfeldEncoder` for saving and loading .NET `Bitmap` objects in the farbfeld format.
+There are two static classes, `FarbfeldDecoder` and `FarbfeldEncoder` for saving and loading .NET `Bitmap` objects in the farbfeld format, along with a helper object `FarbfeldImageData` for holding the data without having to mess around with `Bitmap` objects (although can can use those to).
 
 ### FarbfeldDecoder
 
-* `Decode(string)` - reads a farbfeld image from a file and creates a `Bitmap` from the data
-* `Decode(Stream)` - reads a farbfeld image from a Stream and creates a `Bitmap` from the data
+* `Decode(string)` - reads a farbfeld image from a file and creates a `FarbfeldImageData` object from the data
+* `Decode(Stream)` - reads a farbfeld image from a Stream and creates a `FarbfeldImageData` from the data
 * `IsFarbfeldImage(string)` - tests if the given file contains a farbfeld image
 * `IsFarbfeldImage(Stream)` - tests if the given Stream contains a farbfeld image
 
 ### FarbfeldEncoder
 
-* `Encode(string)` - saves a `Bitmap` into the specified file using the farbfeld format
-* `Encode(Stream)` - saves a `Bitmap` into the specified Stream using the farbfeld format
-
-> Note: Only 32bpp RGBA images are supported by the `FarbfeldEncoder` class at this time
+* `Encode(string, Bitmap)` - saves a `Bitmap` into the specified file using the farbfeld format
+* `Encode(Stream, Bitmap)` - saves a `Bitmap` into the specified Stream using the farbfeld format
+* `Encode(string, FarbfeldImageData)` - saves raw image data into the specified file using the farbfeld format
+* `Encode(Stream, FarbfeldImageData)` - saves raw image data into the specified Stream using the farbfeld format
 
 Sample Application
 ------------------
@@ -60,12 +56,12 @@ The sample images which I used for reference to ensure the encoding/decoding act
 Tests
 -----
 
-Naughty me, I didn't add any tests yet.
+There are some tests. However, they have only been tested on little-endian systems (ie Windows)... I suspect the thing is going to break on big-endian systems.
 
 Nuget?
 ------
 
-I haven't really spent a huge amount of time on this yet so what you see is what you get. Once I've expanded the encoder to get pixel data for formats other than 32bit and made sure the API is suitable, I'll create a package.
+There's a package, but I haven't published it yet.
 
 Acknowledgements
 ----------------

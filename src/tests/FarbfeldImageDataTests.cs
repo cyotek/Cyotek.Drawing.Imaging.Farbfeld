@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using Xunit;
+using NUnit.Framework;
 
 namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
 {
@@ -9,7 +9,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
   {
     #region Methods
 
-    [Fact]
+    [Test]
     public void Constructor_with_image_should_extract_data_properly()
     {
       // arrange
@@ -31,7 +31,7 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       this.AssertEqual(expected, target, true);
     }
 
-    [Fact]
+    [Test]
     public void SetData_with_invalid_argument_throws_exception()
     {
       // arrange
@@ -51,10 +51,10 @@ namespace Cyotek.Drawing.Imaging.Farbfeld.Tests
       ex = Assert.Throws<ArgumentException>(() => { target.SetData(new ushort[16]); });
 
       // assert
-      Assert.Equal(expectedMessage, ex.Message);
+      Assert.AreEqual(expectedMessage, ex.Message);
     }
 
-    [Fact]
+    [Test]
     public void SetData_with_null_argument_throws_exception()
     {
       // arrange
