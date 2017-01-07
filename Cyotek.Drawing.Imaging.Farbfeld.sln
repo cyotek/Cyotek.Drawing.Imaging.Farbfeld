@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarbfeldViewer", "src\FarbfeldViewer\FarbfeldViewer.csproj", "{0C6FDB6C-4C03-46B0-9595-505312D40353}"
 EndProject
@@ -9,8 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyotek.Drawing.Imaging.Farb
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{3FB33FAA-5F73-4F49-8B72-A46E85197DC0}"
 	ProjectSection(SolutionItems) = preProject
+		build.cmd = build.cmd
 		CHANGELOG.md = CHANGELOG.md
 		LICENSE.md = LICENSE.md
+		push.cmd = push.cmd
 		README.md = README.md
 		TODO.md = TODO.md
 	EndProjectSection

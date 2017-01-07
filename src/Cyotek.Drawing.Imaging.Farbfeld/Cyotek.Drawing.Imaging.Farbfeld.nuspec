@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <id>Cyotek.Drawing.Imaging.Farbfeld</id>
-    <version>2.0.0</version>
+    <id>$id$</id>
+    <version>$version$</version>
     <title>Cyotek.Drawing.Imaging.Farbfeld</title>
     <authors>Cyotek</authors>
     <owners>Cyotek</owners>
@@ -17,7 +17,7 @@
     </description>
     <summary>Cyotek.Drawing.Imaging.Farbfeld is a library for encoding and decoding farbfeld image files.</summary>
     <releaseNotes />
-    <copyright>Copyright 2016 Cyotek Ltd.</copyright>
+    <copyright>$copyright$</copyright>
     <language>en-GB</language>
     <tags>cyotek farbfeld</tags>
   </metadata>
