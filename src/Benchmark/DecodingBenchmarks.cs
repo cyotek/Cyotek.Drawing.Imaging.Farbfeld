@@ -117,10 +117,10 @@ namespace FarbfeldBenchmarks
             int b;
             int a;
 
-            r = stream.ReadUInt16BigEndian() / 256;
-            g = stream.ReadUInt16BigEndian() / 256;
-            b = stream.ReadUInt16BigEndian() / 256;
-            a = stream.ReadUInt16BigEndian() / 256;
+            r = stream.ReadUInt16BigEndian() / 257;
+            g = stream.ReadUInt16BigEndian() / 257;
+            b = stream.ReadUInt16BigEndian() / 257;
+            a = stream.ReadUInt16BigEndian() / 257;
 
             pixels[j] = new ArgbColor(a, r, g, b);
           }
@@ -179,10 +179,10 @@ namespace FarbfeldBenchmarks
 
             index = j * recordLength;
 
-            r = WordHelpers.MakeWordBigEndian(buffer[index], buffer[index + 1]) / 256;
-            g = WordHelpers.MakeWordBigEndian(buffer[index + 2], buffer[index + 3]) / 256;
-            b = WordHelpers.MakeWordBigEndian(buffer[index + 4], buffer[index + 5]) / 256;
-            a = WordHelpers.MakeWordBigEndian(buffer[index + 6], buffer[index + 7]) / 256;
+            r = WordHelpers.MakeWordBigEndian(buffer[index], buffer[index + 1]) / 257;
+            g = WordHelpers.MakeWordBigEndian(buffer[index + 2], buffer[index + 3]) / 257;
+            b = WordHelpers.MakeWordBigEndian(buffer[index + 4], buffer[index + 5]) / 257;
+            a = WordHelpers.MakeWordBigEndian(buffer[index + 6], buffer[index + 7]) / 257;
 
             pixels[j] = new ArgbColor(a, r, g, b);
           }
@@ -237,10 +237,10 @@ namespace FarbfeldBenchmarks
 
             stream.Read(buffer, 0, recordLength);
 
-            r = WordHelpers.MakeWordBigEndian(buffer[0], buffer[1]) / 256;
-            g = WordHelpers.MakeWordBigEndian(buffer[2], buffer[3]) / 256;
-            b = WordHelpers.MakeWordBigEndian(buffer[4], buffer[5]) / 256;
-            a = WordHelpers.MakeWordBigEndian(buffer[6], buffer[7]) / 256;
+            r = WordHelpers.MakeWordBigEndian(buffer[0], buffer[1]) / 257;
+            g = WordHelpers.MakeWordBigEndian(buffer[2], buffer[3]) / 257;
+            b = WordHelpers.MakeWordBigEndian(buffer[4], buffer[5]) / 257;
+            a = WordHelpers.MakeWordBigEndian(buffer[6], buffer[7]) / 257;
 
             pixels[j] = new ArgbColor(a, r, g, b);
           }
@@ -302,10 +302,10 @@ namespace FarbfeldBenchmarks
 
               index = col * recordLength;
 
-              r = WordHelpers.MakeWordBigEndian(buffer[index], buffer[index + 1]) / 256;
-              g = WordHelpers.MakeWordBigEndian(buffer[index + 2], buffer[index + 3]) / 256;
-              b = WordHelpers.MakeWordBigEndian(buffer[index + 4], buffer[index + 5]) / 256;
-              a = WordHelpers.MakeWordBigEndian(buffer[index + 6], buffer[index + 7]) / 256;
+              r = WordHelpers.MakeWordBigEndian(buffer[index], buffer[index + 1]) / 257;
+              g = WordHelpers.MakeWordBigEndian(buffer[index + 2], buffer[index + 3]) / 257;
+              b = WordHelpers.MakeWordBigEndian(buffer[index + 4], buffer[index + 5]) / 257;
+              a = WordHelpers.MakeWordBigEndian(buffer[index + 6], buffer[index + 7]) / 257;
 
               pixels[row * width + col] = new ArgbColor(a, r, g, b);
             }

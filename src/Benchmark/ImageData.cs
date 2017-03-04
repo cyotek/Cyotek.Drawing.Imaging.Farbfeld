@@ -67,10 +67,10 @@ namespace FarbfeldBenchmarks
 
             index = col * recordLength;
 
-            r = WordHelpers.MakeWordBigEndian(buffer[index], buffer[index + 1]) / 256;
-            g = WordHelpers.MakeWordBigEndian(buffer[index + 2], buffer[index + 3]) / 256;
-            b = WordHelpers.MakeWordBigEndian(buffer[index + 4], buffer[index + 5]) / 256;
-            a = WordHelpers.MakeWordBigEndian(buffer[index + 6], buffer[index + 7]) / 256;
+            r = WordHelpers.MakeWordBigEndian(buffer[index], buffer[index + 1]) / 257;
+            g = WordHelpers.MakeWordBigEndian(buffer[index + 2], buffer[index + 3]) / 257;
+            b = WordHelpers.MakeWordBigEndian(buffer[index + 4], buffer[index + 5]) / 257;
+            a = WordHelpers.MakeWordBigEndian(buffer[index + 6], buffer[index + 7]) / 257;
 
             pixels[row * width + col] = new ArgbColor(a, r, g, b);
           }

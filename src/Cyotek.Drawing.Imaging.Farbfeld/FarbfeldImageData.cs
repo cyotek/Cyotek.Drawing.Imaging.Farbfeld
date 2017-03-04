@@ -108,8 +108,8 @@ namespace Cyotek.Drawing.Imaging
 
         for (int i = 0; i < width * height; i++)
         {
-          *pixelPtr = new ArgbColor(data[index + 3] / 256, data[index] / 256, data[index + 1] / 256,
-                                    data[index + 2] / 256);
+          *pixelPtr = new ArgbColor(data[index + 3] / 257, data[index] / 257, data[index + 1] / 257,
+                                    data[index + 2] / 257);
           pixelPtr++;
           index += 4;
         }

@@ -130,10 +130,10 @@ namespace FarbfeldBenchmarks
             ushort b;
             ushort a;
 
-            r = (ushort)(pixel.R * 256);
-            g = (ushort)(pixel.G * 256);
-            b = (ushort)(pixel.B * 256);
-            a = (ushort)(pixel.A * 256);
+            r = (ushort)(pixel.R * 257);
+            g = (ushort)(pixel.G * 257);
+            b = (ushort)(pixel.B * 257);
+            a = (ushort)(pixel.A * 257);
 
             stream.WriteBigEndian(r);
             stream.WriteBigEndian(g);
@@ -206,10 +206,10 @@ namespace FarbfeldBenchmarks
 
             index = j * recordLength;
 
-            r = (ushort)(pixel.R * 256);
-            g = (ushort)(pixel.G * 256);
-            b = (ushort)(pixel.B * 256);
-            a = (ushort)(pixel.A * 256);
+            r = (ushort)(pixel.R * 257);
+            g = (ushort)(pixel.G * 257);
+            b = (ushort)(pixel.B * 257);
+            a = (ushort)(pixel.A * 257);
 
             data[index] = (byte)(r >> 8);
             data[index + 1] = (byte)r;
@@ -290,10 +290,10 @@ namespace FarbfeldBenchmarks
 
             pixel = pixels[j];
 
-            r = (ushort)(pixel.R * 256);
-            g = (ushort)(pixel.G * 256);
-            b = (ushort)(pixel.B * 256);
-            a = (ushort)(pixel.A * 256);
+            r = (ushort)(pixel.R * 257);
+            g = (ushort)(pixel.G * 257);
+            b = (ushort)(pixel.B * 257);
+            a = (ushort)(pixel.A * 257);
 
             data[0] = (byte)(r >> 8);
             data[1] = (byte)r;
@@ -377,10 +377,10 @@ namespace FarbfeldBenchmarks
               index = col * recordLength;
               pixel = pixels[row * width + col];
 
-              r = (ushort)(pixel.R * 256);
-              g = (ushort)(pixel.G * 256);
-              b = (ushort)(pixel.B * 256);
-              a = (ushort)(pixel.A * 256);
+              r = (ushort)(pixel.R * 257);
+              g = (ushort)(pixel.G * 257);
+              b = (ushort)(pixel.B * 257);
+              a = (ushort)(pixel.A * 257);
 
               data[index] = (byte)(r >> 8);
               data[index + 1] = (byte)r;
